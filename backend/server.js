@@ -1,7 +1,15 @@
 const express = require("express");
 const VoiceResponse = require("twilio").twiml.VoiceResponse;
+const PORT = process.env.PORT || 8080;
 
 const app = express();
+
+app.get("/info", (req, res) => {
+  res.send(
+    `<p>Phonebook has info for 4 people.</p>
+  <p>2</p>`
+  );
+});
 
 app.post("/voice", (req, res) => {
   const twiml = new VoiceResponse();
@@ -13,10 +21,7 @@ app.post("/voice", (req, res) => {
     to the public so please do not identify yourself. talk for as long as 
     you want.`
   );
-  twiml.record({
-    timeout: 15,
-    maxLength: 600,
-  });
+  twiml.record();
 
   twiml.hangup();
 
@@ -24,4 +29,6 @@ app.post("/voice", (req, res) => {
   res.send(twiml.toString());
 });
 
-app.listen(1337);
+app.listen(PORT, () => {
+  console.log(`Server listening on port: ${PORT}`);
+});
